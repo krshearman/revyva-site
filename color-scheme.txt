@@ -1,0 +1,11 @@
+Midnight Navy
+#2C3E50
+
+Elegant Lavender
+#C8A2C8
+
+Ivory Glow
+#FDF5E6
+
+Rosewood Red
+#9B2335
