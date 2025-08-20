@@ -35,6 +35,33 @@ body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,s
 .btn.primary{background:var(--color-secondary); color:var(--color-primary)}
 
 .checklist{list-style:none; padding:0; margin:0; display:grid; gap:8px}
+.toc-list li{display:block}
+.toc-list summary{display:flex; align-items:center; gap:10px; cursor:pointer}
+.toc-list summary .toc-chevron{margin-left:auto; transition: transform 160ms ease}
+.toc-list details[open] .toc-chevron{transform: rotate(180deg)}
+.toc-list details{border:1px solid rgba(44,62,80,0.12); border-radius:10px; padding:10px 12px; background:rgba(44,62,80,0.015)}
+.toc-list details + li{margin-top:8px}
+.toc-icon{width:1.3rem; height:1.3rem; flex:0 0 1.3rem}
+.toc-desc{margin:10px 0 0 30px; color:var(--color-on-surface)}
+
+  /* Mini‑App Benefits icons */
+  .benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+  }
+  .benefits-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+  }
+  .benefits-list li::before { content: none !important; }
+  .benefits-list ion-icon {
+    color: #9B2335; /* Rosewood Red */
+    font-size: 1.3rem;
+    min-width: 1.3rem;
+  }
 blockquote{border-left:3px solid var(--color-secondary); padding-left:12px; margin:12px 0}
 
 .site-footer{max-width:960px; margin:40px auto; padding:0 16px; color:rgba(253,245,230,0.8)}
@@ -58,3 +85,12 @@ blockquote{border-left:3px solid var(--color-secondary); padding-left:12px; marg
   .site-header h1 img{width:40px; height:40px}
   .hero h2{font-size:30px}
 }
+
+/* FAQ dropdown styling */
+#faq details{border:1px solid rgba(44,62,80,0.12); border-radius:10px; padding:10px 12px; background:rgba(44,62,80,0.015)}
+#faq details + details{margin-top:8px}
+#faq summary{display:flex; align-items:center; gap:10px; cursor:pointer; list-style:none}
+#faq summary ion-icon{font-size:1.3rem}
+#faq summary::-webkit-details-marker{display:none}
+#faq .faq-chevron{margin-left:auto; transition: transform 160ms ease}
+#faq details[open] .faq-chevron{transform: rotate(180deg)}
