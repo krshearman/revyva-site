@@ -1,0 +1,14 @@
+# Protect direct access to PDF files
+# Redirect to authentication page
+RewriteEngine On
+
+# Redirect direct PDF access to the authentication page
+RewriteCond %{REQUEST_FILENAME} \.(pdf)$ [NC]
+RewriteCond %{HTTP_REFERER} !^https?://([^.]+\.)?revyva\.careers [NC]
+RewriteRule ^(.*)$ /workbook/ [R=302,L]
+
+# Optional: Add headers for PDF files when properly accessed
+<Files "*.pdf">
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Content-Type-Options "nosniff"
+</Files>

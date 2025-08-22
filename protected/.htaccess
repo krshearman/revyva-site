@@ -1,0 +1,14 @@
+# Deny direct access to protected files
+Order deny,allow
+Deny from all
+
+# Only allow access from the main domain
+Allow from revyva.careers
+Allow from localhost
+
+# Additional security headers
+<Files "*.pdf">
+    Header set X-Robots-Tag "noindex, nofollow"
+    Header set Cache-Control "private, no-cache, no-store, must-revalidate"
+    Header set X-Frame-Options "DENY"
+</Files>
