@@ -56,19 +56,32 @@
             'clarity-mapping.pdf',
             'personal-brand.pdf',
             'education-roi.pdf',
-            'connection-builder.pdf'
+            'connection-builder.pdf',
+            '01-journal-page.pdf',
+            '02-journal-page.pdf',
+            '03-journal-page.pdf',
+            '04-journal-page.pdf',
+            '05-journal-page.pdf'
         ];
+
+        // Determine redirect page based on file type
+        function getRedirectPage() {
+            if (file && file.includes('journal')) {
+                return '/journal/';
+            }
+            return '/workbook/';
+        }
 
         async function downloadSecureFile() {
             if (!checkAuth()) {
                 // Redirect to authentication page
-                window.location.href = '/workbook/';
+                window.location.href = getRedirectPage();
                 return;
             }
 
             if (!file || !validFiles.includes(file)) {
                 // Invalid file request
-                window.location.href = '/workbook/';
+                window.location.href = getRedirectPage();
                 return;
             }
 
@@ -102,9 +115,9 @@
                 a.click();
                 window.URL.revokeObjectURL(url);
                 
-                // Redirect back to workbook page after download
+                // Redirect back to appropriate page after download
                 setTimeout(() => {
-                    window.location.href = '/workbook/';
+                    window.location.href = getRedirectPage();
                 }, 1000);
                 
             } catch (error) {

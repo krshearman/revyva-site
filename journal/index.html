@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Revyva Journal Access - Protected Content</title>
+    <meta name="description" content="Access your premium Revyva journal materials." />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(44, 62, 80, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .auth-form {
+            background: #fff;
+            padding: 32px;
+            border-radius: 12px;
+            min-width: 320px;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .auth-form h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #2C3E50;
+            text-align: center;
+            font-family: 'DM Serif Display', serif;
+        }
+
+        .auth-form p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .auth-input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .auth-input:focus {
+            border-color: #9B2335;
+        }
+
+        .auth-input.error {
+            border-color: #e74c3c;
+        }
+
+        .auth-button {
+            background: #9B2335;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .auth-button:hover {
+            background: #7a1c2a;
+        }
+
+        .auth-button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            margin: 0;
+            color: #e74c3c;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .journal-content {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .journal-content.authenticated {
+            display: block;
+        }
+
+        .journal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .journal-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: box-shadow 0.2s;
+        }
+
+        .journal-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .journal-item h3 {
+            color: #2C3E50;
+            margin-bottom: 0.5rem;
+            font-family: 'DM Serif Display', serif;
+        }
+
+        .journal-item p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
+
+        .download-btn {
+            background: #9B2335;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background: #7a1c2a;
+        }
+
+        .site-header {
+            background: #2C3E50;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        .site-header h1 {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            font-family: 'DM Serif Display', serif;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <h1>
+            <img src="../circle-logo-revyva.png" alt="Revyva logo" width="44" height="44" />
+            Revyva Journal Access
+        </h1>
+    </header>
+
+    <div id="authOverlay" class="auth-overlay">
+        <form id="authForm" class="auth-form">
+            <h2>Premium Journal Access</h2>
+            <p>Enter your access key to download the Revyva journal materials.</p>
+            <input
+                type="password"
+                id="accessKey"
+                class="auth-input"
+                placeholder="Enter access key"
+                autocomplete="off"
+                required
+            />
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <button type="submit" id="submitBtn" class="auth-button">
+                Access Journal
+            </button>
+            <p style="font-size: 12px; color: #999;">
+                Don't have an access key? <a href="mailto:support@revyva.com" style="color: #9B2335;">Contact us</a>
+            </p>
+        </form>
+    </div>
+
+    <div id="journalContent" class="journal-content">
+        <h1>Revyva Career Pivot Journal</h1>
+        <p>Welcome to your premium journal collection. Each page contains guided exercises and reflection prompts to support your career transition journey.</p>
+        
+        <div class="journal-grid">
+            <div class="journal-item">
+                <h3>Journal Page 1</h3>
+                <p>Self-assessment and current state analysis exercises.</p>
+                <a href="../download.html?file=01-journal-page.pdf" class="download-btn">Download PDF</a>
+            </div>
+            
+            <div class="journal-item">
+                <h3>Journal Page 2</h3>
+                <p>Values clarification and priority setting worksheets.</p>
+                <a href="../download.html?file=02-journal-page.pdf" class="download-btn">Download PDF</a>
+            </div>
+            
+            <div class="journal-item">
+                <h3>Journal Page 3</h3>
+                <p>Skills inventory and gap analysis templates.</p>
+                <a href="../download.html?file=03-journal-page.pdf" class="download-btn">Download PDF</a>
+            </div>
+            
+            <div class="journal-item">
+                <h3>Journal Page 4</h3>
+                <p>Goal setting and action planning frameworks.</p>
+                <a href="../download.html?file=04-journal-page.pdf" class="download-btn">Download PDF</a>
+            </div>
+            
+            <div class="journal-item">
+                <h3>Journal Page 5</h3>
+                <p>Progress tracking and reflection exercises.</p>
+                <a href="../download.html?file=05-journal-page.pdf" class="download-btn">Download PDF</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Same hash-based authentication as the workbook system
+        const ACCESS_KEY_HASH = 'ed1e70b20c2f496bbf58638229dde8edb1c18b113434bf367ceb32d64d464580';
+
+        // Simple hash function for client-side validation
+        async function hashString(str) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // Check if already authenticated
+        function checkAuth() {
+            return localStorage.getItem('revyva_workbook_authed') === 'true';
+        }
+
+        // Show authenticated content
+        function showJournal() {
+            document.getElementById('authOverlay').style.display = 'none';
+            document.getElementById('journalContent').classList.add('authenticated');
+        }
+
+        // Handle form submission
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const input = document.getElementById('accessKey');
+            const errorDiv = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Reset error state
+            errorDiv.style.display = 'none';
+            input.classList.remove('error');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verifying...';
+            
+            try {
+                const inputHash = await hashString(input.value.trim());
+                
+                if (inputHash === ACCESS_KEY_HASH) {
+                    localStorage.setItem('revyva_workbook_authed', 'true');
+                    showJournal();
+                } else {
+                    errorDiv.textContent = 'Invalid access key. Please contact support for assistance.';
+                    errorDiv.style.display = 'block';
+                    input.classList.add('error');
+                }
+            } catch (err) {
+                errorDiv.textContent = 'Error validating access key. Please try again.';
+                errorDiv.style.display = 'block';
+                input.classList.add('error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Access Journal';
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkAuth()) {
+                showJournal();
+            }
+        });
+    </script>
+</body>
+</html>
