@@ -8,15 +8,15 @@ echo "Encoding PDFs for secure delivery..."
 # Change to the revyva-site directory
 cd /Users/krshearman/Dev/revyva-site
 
-# Encode workbook PDFs from protected directory
+# Encode workbook PDFs from workbook directory
 echo "Encoding workbook PDFs..."
-cd protected
+cd workbook
 for pdf in *.pdf; do
     if [ -f "$pdf" ] && [ -s "$pdf" ]; then
-        echo "Encoding $pdf..."
-        base64 -i "$pdf" -o "${pdf}.b64"
+        echo "Encoding workbook/$pdf..."
+        base64 -i "$pdf" -o "../protected/${pdf}.b64"
     elif [ -f "$pdf" ]; then
-        echo "Skipping empty file: $pdf"
+        echo "Skipping empty file: workbook/$pdf"
     fi
 done
 
