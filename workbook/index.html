@@ -282,6 +282,15 @@
                 
                 if (inputHash === ACCESS_KEY_HASH) {
                     localStorage.setItem('revyva_workbook_authed', 'true');
+                    
+                    // Check for pending download and redirect there instead
+                    const pendingDownload = localStorage.getItem('revyva_pending_download');
+                    if (pendingDownload) {
+                        localStorage.removeItem('revyva_pending_download');
+                        window.location.href = pendingDownload;
+                        return;
+                    }
+                    
                     showWorkbooks();
                 } else {
                     errorDiv.textContent = 'Invalid access key. Please contact support for assistance.';
@@ -301,6 +310,13 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             if (checkAuth()) {
+                // Check for pending download first
+                const pendingDownload = localStorage.getItem('revyva_pending_download');
+                if (pendingDownload) {
+                    localStorage.removeItem('revyva_pending_download');
+                    window.location.href = pendingDownload;
+                    return;
+                }
                 showWorkbooks();
             }
         });

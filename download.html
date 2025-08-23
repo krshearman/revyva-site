@@ -74,13 +74,16 @@
 
         async function downloadSecureFile() {
             if (!checkAuth()) {
+                // Store the current download URL before redirecting to auth
+                localStorage.setItem('revyva_pending_download', window.location.href);
                 // Redirect to authentication page
                 window.location.href = getRedirectPage();
                 return;
             }
 
             if (!file || !validFiles.includes(file)) {
-                // Invalid file request
+                // Invalid file request - store current URL and redirect
+                localStorage.setItem('revyva_pending_download', window.location.href);
                 window.location.href = getRedirectPage();
                 return;
             }
