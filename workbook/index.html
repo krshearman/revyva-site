@@ -179,20 +179,20 @@
         </h1>
     </header>
 
-    <div id="authOverlay" class="auth-overlay">
-        <form id="authForm" class="auth-form">
+    <div id="auth-overlay" class="auth-overlay">
+        <form id="auth-form" class="auth-form">
             <h2>Premium Workbook Access</h2>
-            <p>Enter your access key to download the Revyva workbook materials.</p>
+            <p>Enter your Gumroad license key or legacy access code to download the Revyva workbook materials.</p>
             <input
-                type="password"
-                id="accessKey"
+                type="text"
+                id="access-key"
                 class="auth-input"
-                placeholder="Enter access key"
+                placeholder="Enter your Gumroad license key"
                 autocomplete="off"
                 required
             />
-            <div id="errorMessage" class="error-message" style="display: none;"></div>
-            <button type="submit" id="submitBtn" class="auth-button">
+            <div id="auth-error" class="error-message" style="display: none;"></div>
+            <button type="submit" class="auth-button">
                 Access Workbooks
             </button>
             <p style="font-size: 12px; color: #999;">
@@ -239,52 +239,18 @@
 
     <script src="../gumroad-auth.js"></script>
     <script>
-        // Update form placeholders and text for Gumroad integration
         document.addEventListener('DOMContentLoaded', () => {
-            // Update form elements for Gumroad
-            const accessKeyInput = document.getElementById('accessKey');
-            const formTitle = document.querySelector('.auth-form h2');
-            const formDesc = document.querySelector('.auth-form p');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            if (accessKeyInput) {
-                accessKeyInput.placeholder = 'Enter your Gumroad license key';
-                accessKeyInput.type = 'text'; // Change from password to text for license keys
-            }
-            
-            if (formTitle) {
-                formTitle.textContent = 'Premium Workbook Access';
-            }
-            
-            if (formDesc) {
-                formDesc.textContent = 'Enter your Gumroad license key or legacy access code to download the Revyva workbook materials.';
-            }
-            
-            if (submitBtn) {
-                submitBtn.textContent = 'Access Workbooks';
-            }
-            
-            // Update the form IDs to match the shared auth script
-            const authForm = document.getElementById('authForm');
-            const errorDiv = document.getElementById('errorMessage');
-            const authOverlay = document.getElementById('authOverlay');
-            
-            if (authForm) authForm.id = 'auth-form';
-            if (accessKeyInput) accessKeyInput.id = 'access-key';
-            if (errorDiv) errorDiv.id = 'auth-error';
-            if (authOverlay) authOverlay.id = 'auth-overlay';
-            
-            // Initialize the shared authentication system
-            RevyvaAuth.init();
-            
             // Override the showWorkbooks function to work with our page
             window.showWorkbooks = function() {
                 document.getElementById('auth-overlay').style.display = 'none';
                 document.getElementById('workbookContent').classList.add('authenticated');
             };
             
+            // Initialize the shared authentication system
+            window.RevyvaAuth.init();
+            
             // Check authentication status and show content if authenticated
-            const authStatus = RevyvaAuth.checkAuth();
+            const authStatus = window.RevyvaAuth.checkAuth();
             if (authStatus.valid) {
                 showWorkbooks();
             }

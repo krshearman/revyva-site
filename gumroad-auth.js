@@ -52,12 +52,17 @@ async function verifyGumroadLicense(licenseKey) {
             })
         });
         
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
         if (!response.ok) {
-            console.error('Verification endpoint error:', response.status);
-            return { success: false, message: `Server error (${response.status})` };
+            const errorText = await response.text();
+            console.error('Verification endpoint error:', response.status, errorText);
+            return { success: false, message: `Server error (${response.status}): ${errorText}` };
         }
         
         const result = await response.json();
+        console.log('Verification result:', result);
         
         if (result.success && result.purchase) {
             // Store license info
@@ -69,7 +74,7 @@ async function verifyGumroadLicense(licenseKey) {
         }
     } catch (error) {
         console.error('License verification error:', error);
-        return { success: false, message: 'Network error. Please try again.' };
+        return { success: false, message: `Network error: ${error.message}. Please try again.` };
     }
 }
 
@@ -100,15 +105,19 @@ async function verifyLegacyHash(accessKey) {
 
 // Main authentication function
 async function authenticateUser(inputValue) {
+    console.log('Starting authentication with input:', inputValue ? 'provided' : 'empty');
+    
     // Clear any error messages
     const errorElement = document.getElementById('auth-error');
     if (errorElement) errorElement.style.display = 'none';
     
     // Show loading state
     const submitButton = document.querySelector('.auth-form button[type="submit"]');
-    const originalText = submitButton.textContent;
-    submitButton.textContent = 'Verifying...';
-    submitButton.disabled = true;
+    const originalText = submitButton ? submitButton.textContent : '';
+    if (submitButton) {
+        submitButton.textContent = 'Verifying...';
+        submitButton.disabled = true;
+    }
     
     try {
         // First try Gumroad license verification
@@ -133,13 +142,16 @@ async function authenticateUser(inputValue) {
             console.log('Legacy verification successful');
             return { success: true, type: 'legacy' };
         } else {
+            console.log('Legacy verification failed:', legacyResult.message);
             return { success: false, message: 'Invalid license key or access code' };
         }
         
     } finally {
         // Restore button state
-        submitButton.textContent = originalText;
-        submitButton.disabled = false;
+        if (submitButton) {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+        }
     }
 }
 
@@ -174,6 +186,7 @@ function initAuth() {
     
     // Check for existing authentication
     const authStatus = checkExistingAuth();
+    console.log('Current auth status:', authStatus);
     
     if (authStatus.valid) {
         console.log('User already authenticated with', authStatus.type);
@@ -192,12 +205,16 @@ function initAuth() {
     
     // Set up form submission
     const authForm = document.getElementById('auth-form');
+    console.log('Auth form found:', !!authForm);
+    
     if (authForm) {
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            console.log('Form submitted');
             
             const input = document.getElementById('access-key');
-            const inputValue = input.value.trim();
+            const inputValue = input ? input.value.trim() : '';
+            console.log('Input value length:', inputValue.length);
             
             if (!inputValue) {
                 showAuthError('Please enter your license key or access code');
@@ -205,6 +222,7 @@ function initAuth() {
             }
             
             const result = await authenticateUser(inputValue);
+            console.log('Authentication result:', result);
             
             if (result.success) {
                 hideAuthForm();
@@ -219,8 +237,10 @@ function initAuth() {
                 
                 // Call page-specific success handler
                 if (typeof showWorkbooks === 'function') {
+                    console.log('Calling showWorkbooks');
                     showWorkbooks();
                 } else if (typeof showJournal === 'function') {
+                    console.log('Calling showJournal');
                     showJournal();
                 } else {
                     console.log('Authentication successful - no specific handler found');
@@ -230,6 +250,8 @@ function initAuth() {
                 showAuthError(result.message || 'Authentication failed');
             }
         });
+    } else {
+        console.error('Auth form not found! Check element IDs.');
     }
 }
 

@@ -40,10 +40,12 @@
         </div>
     </div>
 
+    <script src="gumroad-auth.js"></script>
     <script>
-        // Check authentication
+        // Check authentication using the shared auth system
         function checkAuth() {
-            return localStorage.getItem('revyva_workbook_authed') === 'true';
+            const authStatus = window.RevyvaAuth ? window.RevyvaAuth.checkAuth() : { valid: false };
+            return authStatus.valid;
         }
 
         // Get the requested file from URL parameters
