@@ -237,85 +237,55 @@
         </div>
     </div>
 
+    <script src="../gumroad-auth.js"></script>
     <script>
-        // Same hash-based authentication as the workbook system
-        const ACCESS_KEY_HASH = 'ed1e70b20c2f496bbf58638229dde8edb1c18b113434bf367ceb32d64d464580';
-
-        // Simple hash function for client-side validation
-        async function hashString(str) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(str);
-            const hash = await crypto.subtle.digest('SHA-256', data);
-            return Array.from(new Uint8Array(hash))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
-        }
-
-        // Check if already authenticated
-        function checkAuth() {
-            return localStorage.getItem('revyva_workbook_authed') === 'true';
-        }
-
-        // Show authenticated content
-        function showJournal() {
-            document.getElementById('authOverlay').style.display = 'none';
-            document.getElementById('journalContent').classList.add('authenticated');
-        }
-
-        // Handle form submission
-        document.getElementById('authForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const input = document.getElementById('accessKey');
-            const errorDiv = document.getElementById('errorMessage');
+        // Update form placeholders and text for Gumroad integration
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update form elements for Gumroad
+            const accessKeyInput = document.getElementById('accessKey');
+            const formTitle = document.querySelector('.auth-form h2');
+            const formDesc = document.querySelector('.auth-form p');
             const submitBtn = document.getElementById('submitBtn');
             
-            // Reset error state
-            errorDiv.style.display = 'none';
-            input.classList.remove('error');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Verifying...';
+            if (accessKeyInput) {
+                accessKeyInput.placeholder = 'Enter your Gumroad license key';
+                accessKeyInput.type = 'text'; // Change from password to text for license keys
+            }
             
-            try {
-                const inputHash = await hashString(input.value.trim());
-                
-                if (inputHash === ACCESS_KEY_HASH) {
-                    localStorage.setItem('revyva_workbook_authed', 'true');
-                    
-                    // Check for pending download and redirect there instead
-                    const pendingDownload = localStorage.getItem('revyva_pending_download');
-                    if (pendingDownload) {
-                        localStorage.removeItem('revyva_pending_download');
-                        window.location.href = pendingDownload;
-                        return;
-                    }
-                    
-                    showJournal();
-                } else {
-                    errorDiv.textContent = 'Invalid access key. Please contact support for assistance.';
-                    errorDiv.style.display = 'block';
-                    input.classList.add('error');
-                }
-            } catch (err) {
-                errorDiv.textContent = 'Error validating access key. Please try again.';
-                errorDiv.style.display = 'block';
-                input.classList.add('error');
-            } finally {
-                submitBtn.disabled = false;
+            if (formTitle) {
+                formTitle.textContent = 'Premium Journal Access';
+            }
+            
+            if (formDesc) {
+                formDesc.textContent = 'Enter your Gumroad license key or legacy access code to download the Revyva journal materials.';
+            }
+            
+            if (submitBtn) {
                 submitBtn.textContent = 'Access Journal';
             }
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            if (checkAuth()) {
-                // Check for pending download first
-                const pendingDownload = localStorage.getItem('revyva_pending_download');
-                if (pendingDownload) {
-                    localStorage.removeItem('revyva_pending_download');
-                    window.location.href = pendingDownload;
-                    return;
-                }
+            
+            // Update the form IDs to match the shared auth script
+            const authForm = document.getElementById('authForm');
+            const errorDiv = document.getElementById('errorMessage');
+            const authOverlay = document.getElementById('authOverlay');
+            
+            if (authForm) authForm.id = 'auth-form';
+            if (accessKeyInput) accessKeyInput.id = 'access-key';
+            if (errorDiv) errorDiv.id = 'auth-error';
+            if (authOverlay) authOverlay.id = 'auth-overlay';
+            
+            // Initialize the shared authentication system
+            RevyvaAuth.init();
+            
+            // Override the showJournal function to work with our page
+            window.showJournal = function() {
+                document.getElementById('auth-overlay').style.display = 'none';
+                document.getElementById('journalContent').classList.add('authenticated');
+            };
+            
+            // Check authentication status and show content if authenticated
+            const authStatus = RevyvaAuth.checkAuth();
+            if (authStatus.valid) {
                 showJournal();
             }
         });
