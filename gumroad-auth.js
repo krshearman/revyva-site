@@ -90,7 +90,12 @@ async function hashString(str) {
 
 async function verifyLegacyHash(accessKey) {
     try {
+        console.log('Verifying legacy hash for key:', accessKey);
         const inputHash = await hashString(accessKey);
+        console.log('Generated hash:', inputHash);
+        console.log('Expected hash:', ACCESS_KEY_HASH);
+        console.log('Hashes match:', inputHash === ACCESS_KEY_HASH);
+        
         if (inputHash === ACCESS_KEY_HASH) {
             localStorage.setItem('revyva_workbook_authed', 'true');
             return { success: true, type: 'legacy' };
@@ -120,7 +125,18 @@ async function authenticateUser(inputValue) {
     }
     
     try {
-        // First try Gumroad license verification
+        // First try legacy hash authentication (for "revyva-2024-access")
+        console.log('Trying legacy hash verification first...');
+        const legacyResult = await verifyLegacyHash(inputValue);
+        
+        if (legacyResult.success) {
+            console.log('Legacy verification successful');
+            return { success: true, type: 'legacy' };
+        } else {
+            console.log('Legacy verification failed, trying Gumroad...');
+        }
+        
+        // Then try Gumroad license verification if it looks like a license key
         if (inputValue.includes('-') && inputValue.length > 10) {
             console.log('Input looks like Gumroad license, trying Gumroad verification...');
             const result = await verifyGumroadLicense(inputValue);
@@ -130,21 +146,11 @@ async function authenticateUser(inputValue) {
                 return { success: true, type: 'gumroad', data: result.purchase };
             } else {
                 console.log('Gumroad verification failed:', result.message);
-                // Fall through to try legacy auth
             }
         }
         
-        // Try legacy hash authentication
-        console.log('Trying legacy hash verification...');
-        const legacyResult = await verifyLegacyHash(inputValue);
-        
-        if (legacyResult.success) {
-            console.log('Legacy verification successful');
-            return { success: true, type: 'legacy' };
-        } else {
-            console.log('Legacy verification failed:', legacyResult.message);
-            return { success: false, message: 'Invalid license key or access code' };
-        }
+        // If both fail
+        return { success: false, message: 'Invalid license key or access code' };
         
     } finally {
         // Restore button state

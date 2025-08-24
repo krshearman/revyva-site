@@ -42,8 +42,14 @@
 
     <script src="gumroad-auth.js"></script>
     <script>
-        // Check authentication using the shared auth system
+        // Check authentication using both shared auth system and legacy method
         function checkAuth() {
+            // Check legacy hash authentication first
+            if (localStorage.getItem('revyva_workbook_authed') === 'true') {
+                return true;
+            }
+            
+            // Then check Gumroad license
             const authStatus = window.RevyvaAuth ? window.RevyvaAuth.checkAuth() : { valid: false };
             return authStatus.valid;
         }
