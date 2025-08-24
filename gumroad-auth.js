@@ -53,12 +53,11 @@ async function verifyGumroadLicense(licenseKey) {
         });
         
         console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
         
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Verification endpoint error:', response.status, errorText);
-            return { success: false, message: `Server error (${response.status}): ${errorText}` };
+            return { success: false, message: `Server error (${response.status})` };
         }
         
         const result = await response.json();
@@ -74,8 +73,107 @@ async function verifyGumroadLicense(licenseKey) {
         }
     } catch (error) {
         console.error('License verification error:', error);
+        
+        // If this is a CORS error, try alternative verification
+        if (error.message.includes('fetch') || error.name === 'TypeError') {
+            console.log('CORS error detected, trying alternative verification...');
+            return await tryAlternativeGumroadVerification(licenseKey);
+        }
+        
         return { success: false, message: `Network error: ${error.message}. Please try again.` };
     }
+}
+
+// Alternative Gumroad verification using direct Gumroad API
+async function tryAlternativeGumroadVerification(licenseKey) {
+    try {
+        console.log('Trying direct Gumroad API verification...');
+        
+        // Try Gumroad's direct license verification endpoint
+        const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'product_id': GUMROAD_PRODUCT_ID,
+                'license_key': licenseKey.trim(),
+                'increment_uses_count': 'false'
+            })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Direct Gumroad API result:', result);
+            
+            if (result.success) {
+                // Store license info
+                localStorage.setItem('revyva_license_key', licenseKey.trim());
+                localStorage.setItem('revyva_license_data', JSON.stringify(result.purchase));
+                return { success: true, purchase: result.purchase };
+            } else {
+                return { success: false, message: result.message || 'Invalid license key' };
+            }
+        } else {
+            console.log('Direct Gumroad API failed, trying JSONP approach...');
+            return await tryJSONPVerification(licenseKey);
+        }
+        
+    } catch (error) {
+        console.error('Direct Gumroad API error:', error);
+        console.log('Trying JSONP approach...');
+        return await tryJSONPVerification(licenseKey);
+    }
+}
+
+// JSONP-based verification as final fallback
+async function tryJSONPVerification(licenseKey) {
+    return new Promise((resolve) => {
+        const callbackName = 'gumroadCallback_' + Date.now();
+        
+        // Create JSONP callback
+        window[callbackName] = function(data) {
+            delete window[callbackName];
+            document.head.removeChild(script);
+            
+            if (data.success) {
+                localStorage.setItem('revyva_license_key', licenseKey.trim());
+                localStorage.setItem('revyva_license_data', JSON.stringify(data.purchase));
+                resolve({ success: true, purchase: data.purchase });
+            } else {
+                resolve({ success: false, message: data.message || 'Invalid license key' });
+            }
+        };
+        
+        // Create script tag for JSONP
+        const script = document.createElement('script');
+        script.src = `https://api.gumroad.com/v2/licenses/verify?product_id=${encodeURIComponent(GUMROAD_PRODUCT_ID)}&license_key=${encodeURIComponent(licenseKey.trim())}&increment_uses_count=false&callback=${callbackName}`;
+        
+        script.onerror = function() {
+            delete window[callbackName];
+            document.head.removeChild(script);
+            resolve({ 
+                success: false, 
+                message: 'Unable to verify Gumroad license. Please use the legacy access code or contact support.' 
+            });
+        };
+        
+        // Timeout after 30 seconds
+        setTimeout(() => {
+            if (window[callbackName]) {
+                delete window[callbackName];
+                if (script.parentNode) {
+                    document.head.removeChild(script);
+                }
+                resolve({ 
+                    success: false, 
+                    message: 'License verification timeout. Please try again or use the legacy access code.' 
+                });
+            }
+        }, 30000);
+        
+        document.head.appendChild(script);
+    });
 }
 
 // Legacy hash verification (fallback)
