@@ -1,11 +1,11 @@
-Midnight Navy
-#2C3E50
+Indigo
+#1c233c
 
-Elegant Lavender
-#C8A2C8
+Purple
+#824add
 
-Ivory Glow
-#FDF5E6
+Wheat
+#efddcf
 
-Rosewood Red
-#9B2335
+Pink
+#e03562
