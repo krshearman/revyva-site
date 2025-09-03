@@ -23,33 +23,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <header class="site-header">
-      <h1>
-        <img src="circle-logo-revyva.png" alt="Revyva logo" width="44" height="44" decoding="async" loading="eager" />
-        Revyva Careers
-      </h1>
-      <nav class="top-nav nav-bar" aria-label="Primary">
-        <a href="#bundle" class="nav-item" title="Bundle" aria-label="Bundle">
-          <ion-icon name="bag-outline" aria-hidden="true"></ion-icon>
-          <span class="nav-label">Bundle</span>
-        </a>
-        <a href="#mini-app" class="nav-item" title="Mini-App" aria-label="Mini-App">
-          <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
-          <span class="nav-label">Mini-App</span>
-        </a>
-        <a href="#toc" class="nav-item" title="Ebook" aria-label="Ebook">
-          <ion-icon name="book-outline" aria-hidden="true"></ion-icon>
-          <span class="nav-label">Ebook</span>
-        </a>
-        <a href="#faq" class="nav-item" title="FAQ" aria-label="FAQ">
-          <ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>
-          <span class="nav-label">FAQ</span>
-        </a>
-      </nav>
+  <body class="has-banner">
+    <header class="top-bar site-banner" role="banner">
+      <button class="sidebar-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-sidebar">
+        <img src="circle-logo-revyva.png" alt="" class="toggle-logo" />
+        <span class="visually-hidden">Open navigation</span>
+      </button>
+      <h1 class="site-banner-title">Revyva Careers</h1>
     </header>
+    <div class="drawer-backdrop" hidden></div>
+    <div class="app-layout">
+      <aside id="primary-sidebar" class="sidebar" aria-label="Primary">
+        <a href="/" class="sidebar-brand">
+          <img src="circle-logo-revyva.png" alt="Revyva logo" width="76" height="76" loading="eager" decoding="async" />
+        </a>
+        <nav role="navigation">
+          <ul class="sidebar-nav">
+            <li><a href="#bundle" class="js-nav-anchor is-active">Bundle</a></li>
+            <li><a href="#mini-app" class="js-nav-anchor">Mini‑App</a></li>
+            <li><a href="#toc" class="js-nav-anchor">Ebook</a></li>
+            <li><a href="#faq" class="js-nav-anchor">FAQ</a></li>
+          </ul>
+        </nav>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-footer">© Revyva 2025</div>
+      </aside>
+  <div class="main-content">
+        <div class="inner-content">
 
-    <main class="container">
+  <main class="landing-content"> <!-- main landing content -->
       <section class="hero">
         <div class="hero-copy">
           <h2>Pivot with confidence</h2>
@@ -208,7 +210,10 @@
           <p>No. It’s a one‑time purchase.</p>
         </details>
       </section>
-    </main>
+  </main>
+        </div><!-- /.inner-content -->
+      </div><!-- /.main-content -->
+    </div><!-- /.app-layout -->
 
     <footer class="site-footer">
       <div class="footer-row">
@@ -222,36 +227,13 @@
       </div>
     </footer>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script>
-      // Replace with your Gumroad product URL
-      const GUMROAD_URL = 'https://revyva.gumroad.com/l/revyva-careers'
-      document.getElementById('buy-btn').href = GUMROAD_URL
-
-      // Highlight active nav item based on scroll position
-      const navLinks = Array.from(document.querySelectorAll('.nav-bar .nav-item'))
-      const sections = navLinks
-        .map(a => document.querySelector(a.getAttribute('href')))
-        .filter(Boolean)
-
-      function setActive(id){
-        navLinks.forEach(l => l.removeAttribute('aria-current'))
-        const active = document.querySelector(`.nav-bar .nav-item[href="#${id}"]`)
-        if(active) active.setAttribute('aria-current','page')
-      }
-
-      // Observe sections to update active state
-      if('IntersectionObserver' in window && sections.length){
-        const observer = new IntersectionObserver((entries)=>{
-          entries.forEach(entry=>{
-            if(entry.isIntersecting){ setActive(entry.target.id) }
-          })
-        }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.01 })
-        sections.forEach(s => observer.observe(s))
-        // Set initial
-        setActive(sections[0].id)
-      }
-    </script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script src="nav.js"></script>
+  <script>
+    const GUMROAD_URL = 'https://revyva.gumroad.com/l/revyva-careers';
+    const buyBtn = document.getElementById('buy-btn');
+    if(buyBtn) buyBtn.href = GUMROAD_URL;
+  </script>
   </body>
 </html>
