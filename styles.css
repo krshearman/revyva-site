@@ -10,13 +10,13 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--color-text); background:var(--color-bg)}
+body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--color-text); background:var(--color-bg); font-size:120%; line-height:1.5}
 
 /* =============== Layout & Sidebar =============== */
 .app-layout{display:flex; min-height:100vh; width:100%;}
 .sidebar{background:#0f1625; width:210px; padding:28px 18px 32px; display:flex; flex-direction:column; gap:22px; border-right:1px solid #1e2737; position:sticky; top:0; height:100vh; box-sizing:border-box; z-index:1700}
 .sidebar-brand{display:flex; flex-direction:column; align-items:center; gap:14px; text-decoration:none}
-.sidebar-brand img{width:76px; height:76px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,0.4); background:#fff}
+.sidebar-brand img{width:92px; height:92px; border-radius:50%; box-shadow:0 3px 10px rgba(0,0,0,0.5); background:#fff}
 .sidebar-nav{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px}
 .sidebar-nav a{display:flex; align-items:center; gap:10px; padding:11px 14px; font-size:14px; font-weight:500; line-height:1.1; color:#d2d8e5; background:#141c2b; border:1px solid #252f41; border-radius:6px; text-decoration:none; transition:background .25s ease,border-color .25s ease,color .25s ease}
 .sidebar-nav a:hover{background:#182334; border-color:#2f3c52; color:#fff}
@@ -26,8 +26,8 @@ body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,s
 .sidebar-footer{font-size:11px; color:#62708a; text-align:center}
 
 /* Mobile drawer behavior */
-.sidebar-toggle{display:none; position:fixed; top:14px; left:14px; width:64px; height:64px; padding:0; border:none; background:transparent; z-index:1400; cursor:pointer}
-.sidebar-toggle .toggle-logo{display:block; width:64px; height:64px; border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,.45); border:2px solid #1e2737; background:#fff; object-fit:cover; transition:transform .4s cubic-bezier(.7,.3,.1,1), box-shadow .3s ease}
+.sidebar-toggle{display:none; position:fixed; top:8px; left:14px; width:80px; height:80px; padding:0; border:none; background:transparent; z-index:1400; cursor:pointer}
+.sidebar-toggle .toggle-logo{display:block; width:80px; height:80px; border-radius:50%; box-shadow:0 4px 14px rgba(0,0,0,.55); border:2px solid #1e2737; background:#fff; object-fit:cover; transition:transform .4s cubic-bezier(.7,.3,.1,1), box-shadow .3s ease}
 .sidebar-toggle:hover .toggle-logo{transform:scale(1.04)}
 body.nav-open .sidebar-toggle .toggle-logo{box-shadow:0 0 0 3px #e03562,0 4px 14px rgba(0,0,0,.55)}
 .sidebar-toggle:focus-visible .toggle-logo{outline:3px solid #e03562; outline-offset:3px}
@@ -52,14 +52,20 @@ body.nav-open .sidebar-toggle{opacity:0; pointer-events:none;}
 
 /* Top bar (optional like app) */
 /* Fixed site banner (landing page) */
-.site-banner{position:fixed; top:0; left:0; right:0; z-index:800; display:flex; align-items:center; justify-content:center; height:70px; background:#0d1422; border-bottom:1px solid #1e2737; box-shadow:0 2px 6px rgba(0,0,0,.4); padding:0 16px; transition:filter .35s ease}
-.site-banner-title{font-family:'DM Serif Display', Georgia, serif; font-size:24px; font-weight:400; margin:0; color:#efddcf; text-align:center; letter-spacing:.5px}
+.site-banner{position:fixed; top:0; left:0; right:0; z-index:800; display:flex; align-items:center; justify-content:center; height:90px; background:#0d1422; border-bottom:1px solid #1e2737; box-shadow:0 2px 6px rgba(0,0,0,.4); padding:0 16px; transition:filter .35s ease}
+.site-banner-title{font-family:'Source Sans Pro', 'Inter', system-ui, sans-serif; font-size:41px; font-weight:700; margin:0; color:#ffffff; letter-spacing:.25px; width:100%; text-align:right;}
+@media (max-width:980px){
+  .site-banner-title{font-size:29px;}
+}
+.site-banner-title .nowrap{font-weight:700}
+.site-banner-title .site-banner-byline{display:block; font-family:Inter,system-ui,sans-serif; font-size:14px; font-weight:500; letter-spacing:.6px; margin-top:4px; text-transform:none; opacity:.85}
+.nowrap{white-space:nowrap}
 .site-banner .sidebar-toggle{position:absolute; left:14px; top:3px; display:inline-flex;}
 @media (min-width:981px){
-  /* Hide banner title on large screens since sidebar brand already shows */
-  .site-banner-title{opacity:0; pointer-events:none; position:absolute}
+  /* Desktop: hide the banner title */
+  .site-banner-title{opacity:0; pointer-events:none; position:absolute;}
 }
-body.has-banner .main-content{padding-top:90px}
+body.has-banner .main-content{padding-top:110px}
 
 
 /* Global link color: Lavender on navy backgrounds */
@@ -107,20 +113,30 @@ body.nav-open .nav-toggle .bar:after{top:0; transform:rotate(-45deg)}
 
 .container{max-width:960px; margin:0 auto; padding:32px 16px}
 .card{background:var(--color-surface); color:var(--color-on-surface); border-radius:12px; padding:24px; box-shadow:var(--shadow); margin:24px 0}
+.card-block{background:#ffffff; color:#1c233c; border-radius:10px; padding:20px 22px; box-shadow:0 2px 6px rgba(0,0,0,0.08),0 0 0 1px rgba(28,35,60,0.06); position:relative}
+.card-block + .card-block{margin-top:18px}
+.card-block h2,.card-block h3,.card-block h4{margin-top:0}
+.card-block details{background:#f8f9fb; border:1px solid rgba(28,35,60,0.12); border-radius:8px; padding:10px 12px}
+.card-block details + details{margin-top:10px}
+.card-block details[open]{background:#f2f5f8}
+.faq-list details{background:#ffffff; border:1px solid rgba(28,35,60,0.14); padding:10px 12px; border-radius:8px}
+.faq-list details[open]{background:#f6f8fa}
 .grid-3{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px}
 
 .hero{padding:48px 0}
-.hero h2{font-family:'DM Serif Display', Georgia, serif; font-weight:400; font-size:36px; margin:0 0 8px 0}
-.hero p{max-width:56ch}
+.hero h2{font-family:'DM Serif Display', Georgia, serif; font-weight:400; font-size:43px; margin:0 0 10px 0; color:#ffffff}
+.hero p{max-width:56ch; color:#ffffff}
 .actions{display:flex; gap:12px; margin-top:12px}
-.btn{border:1px solid transparent; background:#eaeaea; color:var(--color-on-surface); padding:12px 16px; border-radius:10px; cursor:pointer; font-weight:700; text-decoration:none}
-.btn.primary{background:var(--color-secondary); color:var(--color-primary)}
+.btn{border:1px solid transparent; background:#eaeaea; color:var(--color-on-surface); padding:12px 16px; border-radius:10px; cursor:pointer; font-weight:700; text-decoration:none; position:relative; transition:background .25s ease, box-shadow .35s cubic-bezier(.7,.3,.1,1), transform .35s cubic-bezier(.7,.3,.1,1)}
+.btn.primary{background:var(--color-secondary); color:#ffffff; box-shadow:0 2px 6px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.1)}
+.btn.primary:hover,.btn.primary:focus-visible{box-shadow:0 6px 18px -2px rgba(0,0,0,0.55),0 0 0 2px rgba(255,255,255,0.15),0 0 0 4px rgba(130,74,221,0.35); transform:translateY(-2px)}
+.btn.primary:active{transform:translateY(0); box-shadow:0 2px 8px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.15)}
 
 .checklist{list-style:none; padding:0; margin:0; display:grid; gap:8px}
 .toc-list li{display:block}
 .toc-list summary{display:flex; align-items:center; gap:10px; cursor:pointer}
-.toc-list summary .toc-chevron{margin-left:auto; transition: transform 160ms ease}
-.toc-list details[open] .toc-chevron{transform: rotate(180deg)}
+.toc-list summary .toc-chevron{margin-left:auto; transition:transform 160ms ease; font-size:1.2rem; width:1.2rem; height:1.2rem; line-height:1}
+.toc-list details[open] .toc-chevron{transform:rotate(180deg)}
 .toc-list details{border:1px solid rgba(28,35,60,0.12); border-radius:10px; padding:10px 12px; background:rgba(28,35,60,0.015)}
 .toc-list details + li{margin-top:8px}
 .toc-icon{width:1.3rem; height:1.3rem; flex:0 0 1.3rem}
@@ -139,16 +155,16 @@ body.nav-open .nav-toggle .bar:after{top:0; transform:rotate(-45deg)}
     padding: 8px 0;
   }
   .benefits-list li::before { content: none !important; }
-  .benefits-list ion-icon {
-    color: #e03562; /* Pink */
-    font-size: 1.3rem;
-    min-width: 1.3rem;
-  }
+    .benefits-list ion-icon { color: var(--color-secondary); font-size:1.3rem; min-width:1.3rem; }
+    /* Global icon color to purple */
+    ion-icon{color:var(--color-secondary)}
+  .faq-chevron,.toc-chevron{color:var(--color-secondary)!important; font-size:1.2rem; width:1.2rem; height:1.2rem; line-height:1; flex:0 0 1.2rem}
+    .toc-star{display:inline-flex; align-items:center; justify-content:center; width:1.3rem; height:1.3rem; margin-right:10px; color:var(--color-secondary); font-size:1.1rem;}
 blockquote{border-left:3px solid var(--color-secondary); padding-left:12px; margin:12px 0}
 
 .site-footer{max-width:960px; margin:40px auto; padding:0 16px; color:rgba(239,221,207,0.8); transition:filter .35s ease; will-change:filter}
 body.nav-open .site-banner, body.nav-open .main-content, body.nav-open .site-footer{filter:blur(5px) brightness(.7); pointer-events:none}
-.site-footer .footer-row{display:flex; align-items:center; justify-content:center; gap:16px; padding-top:12px; border-top:1px solid rgba(239,221,207,0.2)}
+.site-footer .footer-row{display:flex; align-items:center; justify-content:center; gap:16px; padding:12px 0 calc(22px + env(safe-area-inset-bottom, 18px)); border-top:1px solid rgba(239,221,207,0.2)}
 .site-footer .social-links{display:flex; gap:12px}
 .site-footer .social-links a{display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:999px; border:1px solid rgba(239,221,207,0.25); color:var(--color-text)}
 .site-footer .social-links a:hover{background:rgba(130,74,221,0.15); border-color:var(--color-secondary)}
@@ -175,7 +191,7 @@ body.nav-open .site-banner, body.nav-open .main-content, body.nav-open .site-foo
 #faq summary{display:flex; align-items:center; gap:10px; cursor:pointer; list-style:none}
 #faq summary ion-icon{font-size:1.3rem}
 #faq summary::-webkit-details-marker{display:none}
-#faq .faq-chevron{margin-left:auto; transition: transform 160ms ease}
-#faq details[open] .faq-chevron{transform: rotate(180deg)}
+#faq .faq-chevron{margin-left:auto; transition:transform 160ms ease}
+#faq details[open] .faq-chevron{transform:rotate(180deg)}
 /* FAQ links should be Rosewood Red */
 #faq a, #faq a:visited, #faq a:active { color: var(--color-danger); }
